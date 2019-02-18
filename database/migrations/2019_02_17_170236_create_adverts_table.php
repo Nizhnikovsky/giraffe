@@ -18,12 +18,12 @@ class CreateAdvertsTable extends Migration
             $table->string('title',400);
             $table->text('photo');
             $table->text('description');
+            $table->unsignedInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
             $table->timestamps();
-            $table->primary(['user_id']);
         });
     }
 
