@@ -55,11 +55,11 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         $v = Validator::make($request->all(), [
-            'login'   => 'required|unique:users',
+            'login'   => 'required',
             'password' => 'required'
         ]);
         if($v->fails()) {
-            return response()->json(['message'=>$v->errors()->first('login')],201);
+            return response()->json(['message'=>'All fields required'],201);
         }
         $login = $request->login;
         $password = $request->password;
@@ -67,6 +67,13 @@ class LoginController extends Controller
         if (Auth::attempt(['login' => $login, 'password' => $password])) {
             return response()->json(['message'=>'user logined'],200);
         }else{
+            $v = Validator::make($request->all(), [
+                'login'   => 'required|unique:users',
+                'password' => 'required'
+            ]);
+            if($v->fails()) {
+                return response()->json(['message'=>$v->errors()->first('login')],201);
+            }
             try{
                 $user = User::create([
                     'login' => $login,
